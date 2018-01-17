@@ -14,7 +14,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresConnection;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControl;
-import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControlHandler;
+import com.ait.lienzo.client.core.shape.wires.handlers.WiresControlPointHandler;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresControlFactory;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresHandlerFactory;
 import com.ait.lienzo.client.core.types.BoundingBox;
@@ -110,7 +110,7 @@ public class WiresConnectorControlImplTest {
     private WiresHandlerFactory wiresHandlerFactory;
 
     @Mock
-    private WiresConnectorControlHandler connectorControlHandler;
+    private WiresControlPointHandler connectorControlHandler;
 
     private Point2D head;
 
@@ -158,7 +158,7 @@ public class WiresConnectorControlImplTest {
         when(connector.getTailConnection()).thenReturn(tailConnection);
         when(tailConnection.getControl()).thenReturn(tailControl);
         when(tailControl.asShape()).thenReturn(tailShape);
-        when(wiresHandlerFactory.newConnectorControlHandler(connector, wiresConnectorControl)).thenReturn(connectorControlHandler);
+        when(wiresHandlerFactory.newControlPointHandler(connector, wiresConnectorControl)).thenReturn(connectorControlHandler);
         when(line.getLayer()).thenReturn(layer);
         when(pointHandles.iterator()).thenReturn(pointHandlesIterator);
         when(pointHandlesIterator.hasNext()).thenReturn(true, true, true, false);
