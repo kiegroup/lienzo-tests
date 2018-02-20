@@ -78,7 +78,6 @@ public class WiresManagerTest
         final WiresManager tested2 = WiresManager.get(layer2);
         assertEquals(tested, WiresManager.get(layer));
         assertEquals(tested2, WiresManager.get(layer2));
-
     }
 
     @Test
