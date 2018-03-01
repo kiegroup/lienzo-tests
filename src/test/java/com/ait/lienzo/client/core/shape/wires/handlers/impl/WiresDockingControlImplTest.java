@@ -119,7 +119,7 @@ public class WiresDockingControlImplTest {
         assertEquals(location.getX(), 45, 0);
         assertEquals(location.getY(), -5, 0);
 
-        wiresDockingControl.dock(shape, parent, new Point2D(5, 20));
+        wiresDockingControl.dock(shape, parent, new Point2D(5, 10));
         location = shape.getLocation();
         assertEquals(location.getX(), -5, 0);
         assertEquals(location.getY(), -5, 0);
