@@ -31,7 +31,10 @@ public class ShadowJSO extends JavaScriptObject {
     private boolean onFill;
     private Point2D.Point2DJSO offset;
 
-    public static ShadowJSO make(String color, int blur, boolean onfill, Point2D.Point2DJSO offset) {
+    public static ShadowJSO make(final String color,
+                                 final int blur,
+                                 final boolean onfill,
+                                 final Point2D.Point2DJSO offset) {
         ShadowJSO instance = new ShadowJSO();
         instance.color = color;
         instance.blur = blur;
