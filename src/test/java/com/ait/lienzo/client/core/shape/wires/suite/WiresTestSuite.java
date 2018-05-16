@@ -18,6 +18,7 @@ package com.ait.lienzo.client.core.shape.wires.suite;
 
 import com.ait.lienzo.client.core.shape.TextBoundsWrapTest;
 import com.ait.lienzo.client.core.shape.TextLineBreakWrapTest;
+import com.ait.lienzo.client.core.shape.wires.WiresConnectorTest;
 import com.ait.lienzo.client.core.shape.wires.WiresContainerTest;
 import com.ait.lienzo.client.core.shape.wires.WiresManagerTest;
 import com.ait.lienzo.client.core.shape.wires.WiresShapeControlHandleListTest;
@@ -40,6 +41,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({WiresContainerTest.class,
         WiresShapeTest.class,
+        WiresConnectorTest.class,
         WiresShapeControlHandleListTest.class,
         WiresShapeLocationControlImplTest.class,
         WiresParentPickerControlImplTest.class,
