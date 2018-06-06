@@ -154,7 +154,7 @@ public class LienzoHandlerManagerTest {
     @Test
     public void testMouseDownHandler_RightButton() {
         final boolean isLeft = false;
-        final boolean isMidlle = false;
+        final boolean isMiddle = false;
         final boolean isRight = true;
         final MouseDownEvent event = mock(MouseDownEvent.class);
         doReturn(NativeEvent.BUTTON_RIGHT).when(event).getNativeButton();
@@ -163,13 +163,13 @@ public class LienzoHandlerManagerTest {
 
         mouseDownHandler.getValue().onMouseDown(event);
 
-        verify(dragMouseControl).allowDrag(isLeft, isMidlle, isRight);
+        verify(dragMouseControl).allowDrag(isLeft, isMiddle, isRight);
     }
 
     @Test
     public void testMouseDownHandler_LeftButton() {
         final boolean isLeft = true;
-        final boolean isMidlle = false;
+        final boolean isMiddle = false;
         final boolean isRight = false;
         final MouseDownEvent event = mock(MouseDownEvent.class);
         doReturn(NativeEvent.BUTTON_LEFT).when(event).getNativeButton();
@@ -178,7 +178,7 @@ public class LienzoHandlerManagerTest {
 
         mouseDownHandler.getValue().onMouseDown(event);
 
-        verify(dragMouseControl).allowDrag(isLeft, isMidlle, isRight);
+        verify(dragMouseControl).allowDrag(isLeft, isMiddle, isRight);
     }
 
     @Test
