@@ -153,41 +153,26 @@ public class LienzoHandlerManagerTest {
 
     @Test
     public void testMouseDownHandler_RightButton() {
-        final boolean isLeft = false;
-        final boolean isMiddle = false;
-        final boolean isRight = true;
-        final MouseDownEvent event = mock(MouseDownEvent.class);
-        doReturn(NativeEvent.BUTTON_RIGHT).when(event).getNativeButton();
-
-        verify(lienzoPanel).addMouseDownHandler(mouseDownHandler.capture());
-
-        mouseDownHandler.getValue().onMouseDown(event);
-
-        verify(dragMouseControl).allowDrag(isLeft, isMiddle, isRight);
+        verifyMouseDownHandlerButton(NativeEvent.BUTTON_RIGHT);
     }
 
     @Test
     public void testMouseDownHandler_LeftButton() {
-        final boolean isLeft = true;
-        final boolean isMiddle = false;
-        final boolean isRight = false;
-        final MouseDownEvent event = mock(MouseDownEvent.class);
-        doReturn(NativeEvent.BUTTON_LEFT).when(event).getNativeButton();
-
-        verify(lienzoPanel).addMouseDownHandler(mouseDownHandler.capture());
-
-        mouseDownHandler.getValue().onMouseDown(event);
-
-        verify(dragMouseControl).allowDrag(isLeft, isMiddle, isRight);
+        verifyMouseDownHandlerButton(NativeEvent.BUTTON_LEFT);
     }
 
     @Test
     public void testMouseDownHandler_MiddleButton() {
-        final boolean isLeft = false;
-        final boolean isMiddle = true;
-        final boolean isRight = false;
+
+        verifyMouseDownHandlerButton(NativeEvent.BUTTON_MIDDLE);
+    }
+
+    private void verifyMouseDownHandlerButton(final int buttonCode) {
+        final boolean isLeft = buttonCode == NativeEvent.BUTTON_LEFT;
+        final boolean isMiddle = buttonCode == NativeEvent.BUTTON_MIDDLE;
+        final boolean isRight = buttonCode == NativeEvent.BUTTON_RIGHT;
         final MouseDownEvent event = mock(MouseDownEvent.class);
-        doReturn(NativeEvent.BUTTON_MIDDLE).when(event).getNativeButton();
+        doReturn(buttonCode).when(event).getNativeButton();
 
         verify(lienzoPanel).addMouseDownHandler(mouseDownHandler.capture());
 
