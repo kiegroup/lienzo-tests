@@ -36,7 +36,7 @@ public class AbstractWiresControlTest {
 
     protected WiresManager manager;
 
-    protected ColorMapBackedPicker.PickerOptions pickerOptions = new ColorMapBackedPicker.PickerOptions(false, 0);
+    protected ColorMapBackedPicker.PickerOptions pickerOptions;
 
     @Mock
     protected WiresParentPickerCachedControl parentPicker;
@@ -45,20 +45,19 @@ public class AbstractWiresControlTest {
     protected IDockingAcceptor dockingAcceptor;
 
     protected static final double SHAPE_SIZE = 10;
+
     protected static final double PARENT_SIZE = 100;
 
     public void setUp() {
-
-        layer = new com.ait.lienzo.client.core.shape.Layer();
-        manager = com.ait.lienzo.client.core.shape.wires.WiresManager.get(layer);
-
-        shape = new com.ait.lienzo.client.core.shape.wires.WiresShape(new com.ait.lienzo.client.core.shape.MultiPath().rect(0, 0, SHAPE_SIZE, SHAPE_SIZE));
+        layer = new Layer();
+        pickerOptions = new ColorMapBackedPicker.PickerOptions(false, 0);
+        manager = WiresManager.get(layer);
+        shape = new WiresShape(new com.ait.lienzo.client.core.shape.MultiPath().rect(0, 0, SHAPE_SIZE, SHAPE_SIZE));
         shape.setWiresManager(manager);
-        parent = new com.ait.lienzo.client.core.shape.wires.WiresShape(new com.ait.lienzo.client.core.shape.MultiPath().rect(0, 0, PARENT_SIZE, PARENT_SIZE));
+        parent = new WiresShape(new com.ait.lienzo.client.core.shape.MultiPath().rect(0, 0, PARENT_SIZE, PARENT_SIZE));
         parent.setWiresManager(manager);
         manager.getMagnetManager().createMagnets(parent);
         manager.setDockingAcceptor(dockingAcceptor);
-
         shape.setLocation(new com.ait.lienzo.client.core.types.Point2D(0, 0));
         parent.setLocation(new com.ait.lienzo.client.core.types.Point2D(0, 0));
 
