@@ -15,9 +15,22 @@
  */
 package com.ait.lienzo.client.core.shape.wires.handlers.impl;
 
-import com.ait.lienzo.client.core.shape.*;
-import com.ait.lienzo.client.core.shape.wires.*;
-import com.ait.lienzo.client.core.shape.wires.handlers.*;
+import com.ait.lienzo.client.core.shape.Group;
+import com.ait.lienzo.client.core.shape.IDirectionalMultiPointShape;
+import com.ait.lienzo.client.core.shape.MultiPath;
+import com.ait.lienzo.client.core.shape.MultiPathDecorator;
+import com.ait.lienzo.client.core.shape.PolyLine;
+import com.ait.lienzo.client.core.shape.wires.MagnetManager;
+import com.ait.lienzo.client.core.shape.wires.WiresConnection;
+import com.ait.lienzo.client.core.shape.wires.WiresConnector;
+import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
+import com.ait.lienzo.client.core.shape.wires.WiresShape;
+import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControl;
+import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorHandler;
+import com.ait.lienzo.client.core.shape.wires.handlers.WiresContainmentControl;
+import com.ait.lienzo.client.core.shape.wires.handlers.WiresDockingControl;
+import com.ait.lienzo.client.core.shape.wires.handlers.WiresMagnetsControl;
+import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.client.core.types.Point2DArray;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.ait.tooling.nativetools.client.collection.NFastArrayList;
@@ -28,10 +41,13 @@ import org.mockito.Mock;
 
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyDouble;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(LienzoMockitoTestRunner.class)
 public class WiresShapeControlImplTest extends AbstractWiresControlTest {
+
     private WiresShapeControlImpl wiresShapeControl;
 
     @Mock
@@ -75,11 +91,17 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
     @Mock
     private Group connectorGroup;
 
+    @Mock
+    private MultiPath head;
+
+    @Mock
+    private MultiPath tail;
+
     private NFastArrayList<WiresConnection> connections;
 
     private static final String CONNECTOR_UUID = "UUID";
 
-    private static final com.ait.lienzo.client.core.types.Point2D CONTROL_POINT_LIENZO = new com.ait.lienzo.client.core.types.Point2D(100, 100);
+    private static final Point2D CONTROL_POINT_LIENZO = new Point2D(100, 100);
 
     private static final Point2DArray CONTROL_POINTS_LIENZO = new Point2DArray(CONTROL_POINT_LIENZO);
 
@@ -88,8 +110,6 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
         super.setUp();
         connections = new NFastArrayList<>(connection);
         line = new PolyLine(0, 0, 10, 10, 100, 100);
-        MultiPath head = mock(MultiPath.class);
-        MultiPath tail = mock(MultiPath.class);
 
         when(childWiresShape.getMagnets()).thenReturn(magnets);
         when(childWiresShape.getParent()).thenReturn(shape);
@@ -109,8 +129,8 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
         when(parentPicker.onMove(10, 10)).thenReturn(false);
         when(connector.getHead()).thenReturn(head);
         when(connector.getTail()).thenReturn(tail);
-        when(head.getLocation()).thenReturn(new com.ait.lienzo.client.core.types.Point2D(1, 1));
-        when(tail.getLocation()).thenReturn(new com.ait.lienzo.client.core.types.Point2D(2, 2));
+        when(head.getLocation()).thenReturn(new Point2D(1, 1));
+        when(tail.getLocation()).thenReturn(new Point2D(2, 2));
         shape.getChildShapes().add(childWiresShape);
 
         wiresShapeControl = new WiresShapeControlImpl(parentPicker, m_magnetsControl, m_dockingAndControl, m_containmentControl);
