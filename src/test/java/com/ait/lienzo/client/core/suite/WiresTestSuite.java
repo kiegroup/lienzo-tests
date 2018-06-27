@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Ahome' Innovation Technologies. All rights reserved.
+ * Copyright 2018 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.ait.lienzo.client.core.shape.wires.suite;
+package com.ait.lienzo.client.core.suite;
 
-import com.ait.lienzo.client.core.shape.TextBoundsWrapTest;
-import com.ait.lienzo.client.core.shape.TextLineBreakWrapTest;
 import com.ait.lienzo.client.core.shape.wires.WiresConnectorTest;
 import com.ait.lienzo.client.core.shape.wires.WiresContainerTest;
 import com.ait.lienzo.client.core.shape.wires.WiresManagerTest;
@@ -48,9 +46,7 @@ import org.junit.runners.Suite;
         WiresConnectorControlImplTest.class,
         WiresShapeHandlerImplTest.class,
         WiresCompositeShapeHandlerTest.class,
-        WiresManagerTest.class,
-        TextBoundsWrapTest.class,
-        TextLineBreakWrapTest.class})
+        WiresManagerTest.class})
 public class WiresTestSuite {
 
     @BeforeClass
