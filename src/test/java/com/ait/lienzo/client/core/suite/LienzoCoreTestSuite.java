@@ -23,6 +23,9 @@ import com.ait.lienzo.client.core.shape.MultiPathTest;
 import com.ait.lienzo.client.core.shape.PolyLineTest;
 import com.ait.lienzo.client.core.shape.TextBoundsWrapTest;
 import com.ait.lienzo.client.core.shape.TextLineBreakWrapTest;
+import com.ait.lienzo.client.core.types.BoundingBoxTest;
+import com.ait.lienzo.client.widget.LienzoHandlerManagerTest;
+import com.ait.lienzo.client.widget.LienzoPanelTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -35,7 +38,10 @@ import org.junit.runners.Suite;
         TextLineBreakWrapTest.class,
         ImageTest.class,
         ImageStripsTest.class,
-        ImageElementProxyTest.class})
+        ImageElementProxyTest.class,
+        BoundingBoxTest.class,
+        LienzoPanelTest.class,
+        LienzoHandlerManagerTest.class})
 public class LienzoCoreTestSuite {
 
     @BeforeClass

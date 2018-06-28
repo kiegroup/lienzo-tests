@@ -45,8 +45,8 @@ import static org.mockito.Mockito.verify;
 @RunWith(LienzoMockitoTestRunner.class)
 public class ImageStripsTest {
 
-    public static final String STRIP_NAME = "stripName";
-    public static final String STRIP_URL = "stripUrl";
+    private static final String STRIP_NAME = "stripName";
+    private static final String STRIP_URL = "stripUrl";
 
     private static final ImageStrip STRIP = new ImageStrip(STRIP_NAME,
                                                            STRIP_URL,
@@ -64,7 +64,7 @@ public class ImageStripsTest {
     public void init() {
         doAnswer(new Answer() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+            public Object answer(InvocationOnMock invocationOnMock) {
                 ((Runnable) invocationOnMock.getArguments()[1]).run();
                 return null;
             }
