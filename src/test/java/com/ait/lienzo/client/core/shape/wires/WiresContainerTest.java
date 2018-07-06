@@ -50,6 +50,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -101,6 +102,17 @@ public class WiresContainerTest
         assertNull(tested.getDockedTo());
         assertEquals(parentContainer, tested.getContainer());
         assertEquals(0, tested.getChildShapes().size());
+    }
+
+    @Test
+    public void testLocation()
+    {
+        WiresShape child = spy(new WiresShape(new MultiPath().circle(5)));
+        Point2D point = new Point2D(0d, 0d);
+        tested.add(child);
+        tested.setLocation(point);
+        verify(parentContainer, times(1)).setLocation(eq(point));
+        verify(child, atLeastOnce()).shapeMoved();
     }
 
     @Test
