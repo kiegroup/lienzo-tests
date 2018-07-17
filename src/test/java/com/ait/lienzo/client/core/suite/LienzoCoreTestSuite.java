@@ -25,6 +25,7 @@ import com.ait.lienzo.client.core.shape.PolyLineTest;
 import com.ait.lienzo.client.core.shape.TextBoundsWrapTest;
 import com.ait.lienzo.client.core.shape.TextLineBreakWrapTest;
 import com.ait.lienzo.client.core.types.BoundingBoxTest;
+import com.ait.lienzo.client.core.util.GeometryTest;
 import com.ait.lienzo.client.widget.LienzoHandlerManagerTest;
 import com.ait.lienzo.client.widget.LienzoPanelTest;
 import org.junit.AfterClass;
@@ -34,6 +35,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        GeometryTest.class,
         BoundingBoxTest.class,
         BoundingBoxComputationsTest.class,
         ImageElementProxyTest.class,
