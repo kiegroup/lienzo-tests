@@ -83,7 +83,7 @@ public class WiresCompositeControlImplTest extends AbstractWiresControlTest {
         when(shapeControl.getParentPickerControl()).thenReturn(parentPicker);
         when(shapeControl.getDockingControl()).thenReturn(dockingControl);
         when(shapeControl.getContainmentControl()).thenReturn(containmentControl);
-        shape.setWiresShapeControl(shapeControl);
+        shape.setControl(shapeControl);
         when(shape1.getChildShapes()).thenReturn(new NFastArrayList<WiresShape>());
         final Point2D location1 = new Point2D(11d, 22d);
         when(shape1.getLocation()).thenReturn(location1);

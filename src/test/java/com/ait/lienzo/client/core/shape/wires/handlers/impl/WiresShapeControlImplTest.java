@@ -27,7 +27,6 @@ import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.shape.wires.handlers.AlignAndDistributeControl;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControl;
-import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorHandler;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresContainmentControl;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresDockingControl;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresMagnetsControl;
@@ -40,7 +39,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -64,9 +62,6 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
 
     @Mock
     private WiresContainmentControl m_containmentControl;
-
-    @Mock
-    private WiresConnectorHandler connectorHandler;
 
     @Mock
     private WiresConnectorControl connectorControl;
@@ -127,8 +122,7 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
         when(connector.getGroup()).thenReturn(connectorGroup);
         when(connectorGroup.uuid()).thenReturn(CONNECTOR_UUID);
         when(connector.getControlPoints()).thenReturn(CONTROL_POINTS_LIENZO);
-        when(connector.getWiresConnectorHandler()).thenReturn(connectorHandler);
-        when(connectorHandler.getControl()).thenReturn(connectorControl);
+        when(connector.getControl()).thenReturn(connectorControl);
         when(connector.getLine()).thenReturn(line);
         when(connector.getHeadDecorator()).thenReturn(headDecorator);
         when(connector.getTailDecorator()).thenReturn(tailDecorator);
@@ -170,7 +164,7 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
         verify(connectorControl, never()).onMoveStart(anyDouble(), anyDouble());
 
         tested.onMove(10, 10);
-        verify(connectorControl, never()).move(anyDouble(), anyDouble(), anyBoolean(), anyBoolean());
+        verify(connectorControl, never()).onMove(anyDouble(), anyDouble());
     }
 
     @Test
@@ -181,6 +175,6 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
         verify(connectorControl).onMoveStart(1, 1);
 
         tested.onMove(10, 10);
-        verify(connectorControl).move(10, 10, true, true);
+        verify(connectorControl).onMove(10, 10);
     }
 }
