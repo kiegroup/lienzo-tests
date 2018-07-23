@@ -75,10 +75,10 @@ public abstract class AbstractWiresControlTest {
         manager = WiresManager.get(layer);
         shape = new WiresShape(new MultiPath().rect(0, 0, SHAPE_SIZE, SHAPE_SIZE));
         shape.setWiresManager(manager);
-        shape.setControl(shapeControl);
+        shape.setWiresShapeControl(shapeControl);
         parent = new WiresShape(new MultiPath().rect(0, 0, PARENT_SIZE, PARENT_SIZE));
         parent.setWiresManager(manager);
-        parent.setControl(parentControl);
+        parent.setWiresShapeControl(parentControl);
         manager.getMagnetManager().createMagnets(parent);
         manager.setDockingAcceptor(dockingAcceptor);
 
