@@ -20,9 +20,11 @@ import com.ait.lienzo.client.core.shape.IDirectionalMultiPointShape;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.MultiPathDecorator;
 import com.ait.lienzo.client.core.shape.PolyLine;
+import com.ait.lienzo.client.core.shape.wires.ILocationAcceptor;
 import com.ait.lienzo.client.core.shape.wires.MagnetManager;
 import com.ait.lienzo.client.core.shape.wires.WiresConnection;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
+import com.ait.lienzo.client.core.shape.wires.WiresContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.shape.wires.handlers.AlignAndDistributeControl;
@@ -39,6 +41,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -49,7 +55,12 @@ import static org.mockito.Mockito.when;
 @RunWith(LienzoMockitoTestRunner.class)
 public class WiresShapeControlImplTest extends AbstractWiresControlTest {
 
-    private WiresShapeControlImpl tested;
+    private static final String CONNECTOR_UUID = "UUID";
+    private static final Point2D CONTROL_POINT_LIENZO = new Point2D(100, 100);
+    private static final Point2DArray CONTROL_POINTS_LIENZO = new Point2DArray(CONTROL_POINT_LIENZO);
+
+    @Mock
+    private ILocationAcceptor locationAcceptor;
 
     @Mock
     private AlignAndDistributeControl alignAndDistributeControl;
@@ -98,19 +109,16 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
     @Mock
     private MultiPath tail;
 
+    private WiresShapeControlImpl tested;
     private NFastArrayList<WiresConnection> connections;
-
-    private static final String CONNECTOR_UUID = "UUID";
-
-    private static final Point2D CONTROL_POINT_LIENZO = new Point2D(100, 100);
-
-    private static final Point2DArray CONTROL_POINTS_LIENZO = new Point2DArray(CONTROL_POINT_LIENZO);
 
     @Before
     public void setup() {
         super.setUp();
+        manager.setLocationAcceptor(locationAcceptor);
         connections = new NFastArrayList<>(connection);
         line = new PolyLine(0, 0, 10, 10, 100, 100);
+        shape.getChildShapes().add(childWiresShape);
 
         when(childWiresShape.getMagnets()).thenReturn(magnets);
         when(childWiresShape.getParent()).thenReturn(shape);
@@ -131,6 +139,7 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
         when(connector.getTail()).thenReturn(tail);
         when(head.getLocation()).thenReturn(new Point2D(1, 1));
         when(tail.getLocation()).thenReturn(new Point2D(2, 2));
+        when(alignAndDistributeControl.isDraggable()).thenReturn(true);
 
         tested = new WiresShapeControlImpl(parentPicker, m_magnetsControl, m_dockingAndControl, m_containmentControl);
         tested.setAlignAndDistributeControl(alignAndDistributeControl);
@@ -147,18 +156,133 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
 
     @Test
     public void testOnMoveStart() {
-        shape.getChildShapes().add(childWiresShape);
         tested.onMoveStart(2, 7);
-        verify(index, never()).clear();
         verify(index, times(1)).addShapeToSkip(eq(shape));
         verify(index, times(1)).addShapeToSkip(eq(childWiresShape));
+        verify(index, never()).clear();
         verify(m_dockingAndControl, times(1)).onMoveStart(eq(2d), eq(7d));
         verify(m_containmentControl, times(1)).onMoveStart(eq(2d), eq(7d));
         verify(alignAndDistributeControl, times(1)).dragStart();
+        verify(connectorControl, times(1)).onMoveStart(eq(2d), eq(7d));
+    }
+
+    @Test
+    public void testOnMove() {
+        when(parentPicker.onMove(anyDouble(), anyDouble())).thenReturn(false);
+        when(m_dockingAndControl.onMove(anyDouble(), anyDouble())).thenReturn(false);
+        when(m_containmentControl.onMove(anyDouble(), anyDouble())).thenReturn(false);
+        tested.onMoveStart(1, 4);
+        tested.onMove(2, 7);
+        verify(m_dockingAndControl, times(1)).onMove(eq(2d), eq(7d));
+        verify(m_containmentControl, times(1)).onMove(eq(2d), eq(7d));
+        verify(alignAndDistributeControl, times(1)).dragAdjust(eq(new Point2D(2, 7)));
+        verify(connectorControl, times(1)).onMove(eq(2d), eq(7d));
+    }
+
+    @Test
+    public void testOnMoveComplete() {
+        when(m_dockingAndControl.onMoveComplete()).thenReturn(true);
+        when(m_containmentControl.onMoveComplete()).thenReturn(true);
+        tested.onMoveStart(1, 4);
+        tested.onMoveComplete();
+        verify(m_dockingAndControl, times(1)).onMoveComplete();
+        verify(m_containmentControl, times(1)).onMoveComplete();
+        verify(alignAndDistributeControl, times(1)).dragEnd();
+        verify(connectorControl, times(1)).onMoveComplete();
+    }
+
+    @Test
+    public void testAcceptContainment() {
+        Point2D somePoint = new Point2D(1, 2);
+        when(locationAcceptor.accept(eq(new WiresContainer[] {shape}),
+                                     eq(new Point2D[] {somePoint})))
+                .thenReturn(true);
+        when(m_containmentControl.accept()).thenReturn(true);
+        when(m_dockingAndControl.accept()).thenReturn(false);
+        when(m_containmentControl.getCandidateLocation()).thenReturn(somePoint);
+        when(m_dockingAndControl.getCandidateLocation()).thenReturn(null);
+        boolean result = tested.accept();
+        assertTrue(result);
+    }
+
+    @Test
+    public void testAcceptDocking() {
+        Point2D somePoint = new Point2D(1, 2);
+        when(locationAcceptor.accept(eq(new WiresContainer[] {shape}),
+                                     eq(new Point2D[] {somePoint})))
+                .thenReturn(true);
+        when(m_containmentControl.accept()).thenReturn(false);
+        when(m_dockingAndControl.accept()).thenReturn(true);
+        when(m_containmentControl.getCandidateLocation()).thenReturn(null);
+        when(m_dockingAndControl.getCandidateLocation()).thenReturn(somePoint);
+        boolean result = tested.accept();
+        assertTrue(result);
+    }
+
+    @Test
+    public void testAcceptFailed() {
+        when(m_containmentControl.accept()).thenReturn(false);
+        when(m_dockingAndControl.accept()).thenReturn(false);
+        boolean result = tested.accept();
+        assertFalse(result);
+    }
+
+    @Test
+    public void testExecuteContainment() {
+        Point2D somePoint = new Point2D(1, 2);
+        when(m_containmentControl.accept()).thenReturn(true);
+        when(m_containmentControl.getCandidateLocation()).thenReturn(somePoint);
+        when(locationAcceptor.accept(any(WiresContainer[].class),
+                                     any(Point2D[].class)))
+                .thenReturn(true);
+        tested.onMoveStart(1, 2);
+        tested.accept();
+        tested.execute();
+        verify(m_containmentControl, times(1)).execute();
+        verify(parentPicker, times(1)).setShapeLocation(eq(somePoint));
+        verify(connectorControl, times(1)).execute();
+    }
+
+    @Test
+    public void testExecuteDocking() {
+        Point2D somePoint = new Point2D(1, 2);
+        when(m_dockingAndControl.accept()).thenReturn(true);
+        when(m_dockingAndControl.getCandidateLocation()).thenReturn(somePoint);
+        when(locationAcceptor.accept(any(WiresContainer[].class),
+                                     any(Point2D[].class)))
+                .thenReturn(true);
+        tested.onMoveStart(2, 3);
+        tested.accept();
+        tested.execute();
+        verify(m_dockingAndControl, times(1)).execute();
+        verify(parentPicker, times(1)).setShapeLocation(eq(somePoint));
+        verify(connectorControl, times(1)).execute();
+    }
+
+    @Test
+    public void testReset() {
+        tested.onMoveStart(2, 3);
+        tested.reset();
+        assertEquals(new Point2D(0, 0), tested.getAdjust());
+        verify(m_containmentControl, times(1)).reset();
+        verify(m_dockingAndControl, times(1)).reset();
+        verify(parentPicker, times(1)).reset();
+        verify(connectorControl, times(1)).reset();
+    }
+
+    @Test
+    public void testConnectionsMoveWithChildren() {
+
+        tested.onMoveStart(1, 1);
+        verify(connectorControl).onMoveStart(1, 1);
+
+        tested.onMove(10, 10);
+        verify(connectorControl).onMove(10, 10);
     }
 
     @Test
     public void testConnectionsMoveWithNoChildren() {
+        shape.getChildShapes().remove(childWiresShape);
 
         tested.onMoveStart(0, 0);
         verify(connectorControl, never()).onMoveStart(anyDouble(), anyDouble());
@@ -167,14 +291,4 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
         verify(connectorControl, never()).onMove(anyDouble(), anyDouble());
     }
 
-    @Test
-    public void testConnectionsMoveWithChildren() {
-        shape.getChildShapes().add(childWiresShape);
-
-        tested.onMoveStart(1, 1);
-        verify(connectorControl).onMoveStart(1, 1);
-
-        tested.onMove(10, 10);
-        verify(connectorControl).onMove(10, 10);
-    }
 }
