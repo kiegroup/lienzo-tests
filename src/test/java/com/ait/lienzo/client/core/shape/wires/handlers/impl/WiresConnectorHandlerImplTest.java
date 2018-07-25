@@ -23,9 +23,11 @@ import com.ait.lienzo.client.core.event.NodeMouseDoubleClickEvent;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControl;
+import com.ait.lienzo.client.core.shape.wires.handlers.impl.WiresConnectorHandlerImpl.Event;
 import com.ait.lienzo.client.widget.DragContext;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.ait.tooling.common.api.java.util.function.Consumer;
+import com.google.gwt.user.client.Timer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +35,7 @@ import org.mockito.Mock;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -53,10 +55,13 @@ public class WiresConnectorHandlerImplTest {
     private WiresConnectorControl control;
 
     @Mock
-    private Consumer<NodeMouseClickEvent> clickEventConsumer;
+    private Consumer<Event> clickEventConsumer;
 
     @Mock
-    private Consumer<NodeMouseDoubleClickEvent> doubleClickEventConsumer;
+    private Timer clickTimer;
+
+    @Mock
+    private Consumer<Event> doubleClickEventConsumer;
 
     private WiresConnectorHandlerImpl tested;
 
@@ -66,7 +71,8 @@ public class WiresConnectorHandlerImplTest {
         tested = new WiresConnectorHandlerImpl(connector,
                                                wiresManager,
                                                clickEventConsumer,
-                                               doubleClickEventConsumer);
+                                               doubleClickEventConsumer,
+                                               clickTimer);
     }
 
     @Test
@@ -121,18 +127,20 @@ public class WiresConnectorHandlerImplTest {
 
     @Test
     public void testOnNodeMouseClick() {
+        when(clickTimer.isRunning()).thenReturn(true);
         NodeMouseClickEvent event = mock(NodeMouseClickEvent.class);
         tested.onNodeMouseClick(event);
-        verify(clickEventConsumer, times(1)).accept(eq(event));
-        verify(doubleClickEventConsumer, never()).accept(any(NodeMouseDoubleClickEvent.class));
+        verify(clickTimer, times(1)).cancel();
+        verify(clickTimer, times(1)).schedule(anyInt());
+        verify(doubleClickEventConsumer, never()).accept(any(Event.class));
     }
 
     @Test
     public void testOnNodeMouseDoubleClick() {
         NodeMouseDoubleClickEvent event = mock(NodeMouseDoubleClickEvent.class);
         tested.onNodeMouseDoubleClick(event);
-        verify(doubleClickEventConsumer, times(1)).accept(eq(event));
-        verify(clickEventConsumer, never()).accept(any(NodeMouseClickEvent.class));
+        verify(doubleClickEventConsumer, times(1)).accept(any(Event.class));
+        verify(clickEventConsumer, never()).accept(any(Event.class));
     }
 
     private static DragContext mockDragContext() {

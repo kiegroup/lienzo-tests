@@ -217,7 +217,7 @@ public class WiresConnectorControlImplTest {
 
         IControlPointsAcceptor acceptor = mock(IControlPointsAcceptor.class);
         when(wiresManager.getControlPointsAcceptor()).thenReturn(acceptor);
-        when(acceptor.add(any(WiresConnector.class), anyInt(), anyDouble(), anyDouble())).thenReturn(true);
+        when(acceptor.add(any(WiresConnector.class), anyInt(), any(Point2D.class))).thenReturn(true);
         when(acceptor.delete(any(WiresConnector.class), anyInt())).thenReturn(true);
 
         //add

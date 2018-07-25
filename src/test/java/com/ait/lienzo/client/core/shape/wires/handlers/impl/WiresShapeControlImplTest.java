@@ -157,8 +157,8 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
     @Test
     public void testOnMoveStart() {
         tested.onMoveStart(2, 7);
-        verify(index, times(1)).addShapeToSkip(eq(shape));
-        verify(index, times(1)).addShapeToSkip(eq(childWiresShape));
+        verify(index, times(1)).exclude(eq(shape));
+        verify(index, times(1)).exclude(eq(childWiresShape));
         verify(index, never()).clear();
         verify(m_dockingAndControl, times(1)).onMoveStart(eq(2d), eq(7d));
         verify(m_containmentControl, times(1)).onMoveStart(eq(2d), eq(7d));

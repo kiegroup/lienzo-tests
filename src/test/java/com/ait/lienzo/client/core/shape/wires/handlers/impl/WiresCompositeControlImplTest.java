@@ -111,10 +111,10 @@ public class WiresCompositeControlImplTest extends AbstractWiresControlTest {
     @Test
     public void testSkipAllSelectedShapesOnStart() {
         tested.onMoveStart(2d, 7d);
-        verify(index, times(1)).addShapeToSkip(shape);
-        verify(index, times(1)).addShapeToSkip(shape1);
-        verify(index1, times(1)).addShapeToSkip(shape);
-        verify(index1, times(1)).addShapeToSkip(shape1);
+        verify(index, times(1)).exclude(shape);
+        verify(index, times(1)).exclude(shape1);
+        verify(index1, times(1)).exclude(shape);
+        verify(index1, times(1)).exclude(shape1);
     }
 
     @Test
