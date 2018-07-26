@@ -17,29 +17,17 @@
  */
 package com.ait.lienzo.client.core.shape.wires.handlers.impl;
 
-import java.util.Iterator;
-
 import com.ait.lienzo.client.core.Context2D;
 import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Shape;
-import com.ait.lienzo.client.core.shape.wires.IControlHandle;
-import com.ait.lienzo.client.core.shape.wires.IControlHandleList;
-import com.ait.lienzo.client.core.shape.wires.IControlPointsAcceptor;
-import com.ait.lienzo.client.core.shape.wires.WiresConnection;
-import com.ait.lienzo.client.core.shape.wires.WiresConnector;
-import com.ait.lienzo.client.core.shape.wires.WiresLayer;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.shape.wires.*;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControl;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresControlFactory;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresControlPointHandler;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresHandlerFactory;
-import com.ait.lienzo.client.core.types.BoundingBox;
-import com.ait.lienzo.client.core.types.ImageData;
-import com.ait.lienzo.client.core.types.PathPartList;
-import com.ait.lienzo.client.core.types.Point2D;
-import com.ait.lienzo.client.core.types.Point2DArray;
+import com.ait.lienzo.client.core.types.*;
 import com.ait.lienzo.client.core.util.ScratchPad;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
@@ -49,14 +37,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyDouble;
+import java.util.Iterator;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(LienzoMockitoTestRunner.class)
 public class WiresConnectorControlImplTest {
@@ -215,10 +202,7 @@ public class WiresConnectorControlImplTest {
         final double y = 0;
         final int index = 1;
 
-        IControlPointsAcceptor acceptor = mock(IControlPointsAcceptor.class);
-        when(wiresManager.getControlPointsAcceptor()).thenReturn(acceptor);
-        when(acceptor.add(any(WiresConnector.class), anyInt(), any(Point2D.class))).thenReturn(true);
-        when(acceptor.delete(any(WiresConnector.class), anyInt())).thenReturn(true);
+        when(wiresManager.getControlPointsAcceptor()).thenReturn(IControlPointsAcceptor.ALL);
 
         //add
         wiresConnectorControl.addControlPoint(x, y, index);
@@ -231,5 +215,35 @@ public class WiresConnectorControlImplTest {
         verify(connector, times(1)).destroyControlPoints(eq(new int[] {1}));
     }
 
+    @Test
+    public void testCannotAddOrRemoveControlPoints() {
+        final double x = 10;
+        final double y = 0;
+        final int index = 1;
 
+        when(wiresManager.getControlPointsAcceptor()).thenReturn(IControlPointsAcceptor.NONE);
+
+        //add
+        wiresConnectorControl.addControlPoint(x, y, index);
+        verify(connector, never()).addControlPoint(eq(x),
+                                                    eq(y),
+                                                    eq(index));
+
+        //remove
+        wiresConnectorControl.destroyControlPoint(1);
+        verify(connector, never()).destroyControlPoints(eq(new int[] {1}));
+    }
+
+    @Test
+    public void testMoveConnectionPoints() {
+        when(connector.getControlPoints()).thenReturn(new Point2DArray(new Point2D(0, 0),
+                                                                       new Point2D(1, 1),
+                                                                       new Point2D(3, 3)));
+        when(wiresManager.getControlPointsAcceptor()).thenReturn(IControlPointsAcceptor.NONE);
+        assertTrue(wiresConnectorControl.moveControlPoint(0, new Point2D(1, 1)));
+        assertFalse(wiresConnectorControl.moveControlPoint(1, new Point2D(1, 1)));
+        assertTrue(wiresConnectorControl.moveControlPoint(2, new Point2D(1, 1)));
+        when(wiresManager.getControlPointsAcceptor()).thenReturn(IControlPointsAcceptor.ALL);
+        assertTrue(wiresConnectorControl.moveControlPoint(1, new Point2D(1, 1)));
+    }
 }
