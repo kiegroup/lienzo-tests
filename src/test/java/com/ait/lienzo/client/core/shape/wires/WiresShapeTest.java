@@ -32,6 +32,7 @@ import com.ait.lienzo.client.core.shape.wires.event.WiresResizeStartEvent;
 import com.ait.lienzo.client.core.shape.wires.event.WiresResizeStartHandler;
 import com.ait.lienzo.client.core.shape.wires.event.WiresResizeStepEvent;
 import com.ait.lienzo.client.core.shape.wires.event.WiresResizeStepHandler;
+import com.ait.lienzo.client.core.shape.wires.handlers.WiresShapeControl;
 import com.ait.lienzo.client.core.shape.wires.handlers.impl.WiresShapeHandler;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.client.widget.DragConstraintEnforcer;
@@ -100,14 +101,14 @@ public class WiresShapeTest
     @Before
     public void setup()
     {
-        path = new MultiPath().rect(3, 7, 100, 100);
+        path = spy(new MultiPath().rect(3, 7, 100, 100));
         group = spy(new Group());
         when(layoutContainer.getGroup()).thenReturn(group);
         when(layoutContainer.setOffset(any(Point2D.class))).thenReturn(layoutContainer);
         when(layoutContainer.setSize(anyDouble(), anyDouble())).thenReturn(layoutContainer);
         when(layoutContainer.execute()).thenReturn(layoutContainer);
         when(layoutContainer.refresh()).thenReturn(layoutContainer);
-        tested = new WiresShape(path, layoutContainer, handlerManager, handlerRegistrationManager, attributesChangedBatcher);
+        tested = spy(new WiresShape(path, layoutContainer, handlerManager, handlerRegistrationManager, attributesChangedBatcher));
     }
 
     @Test
@@ -247,12 +248,15 @@ public class WiresShapeTest
     {
         final WiresShapeControlHandleList controls = mock(WiresShapeControlHandleList.class);
         final WiresShape shape = spy(new WiresShape(path, layoutContainer));
+        final WiresShapeControl shapeControl = mock(WiresShapeControl.class);
         doReturn(controls).when(shape).getControls();
+        shape.setWiresShapeControl(shapeControl);
         shape.destroy();
 
         verify(layoutContainer).destroy();
         verify(controls).destroy();
         verify(shape).removeFromParent();
+        verify(shapeControl).destroy();
     }
 
     @Test
@@ -279,12 +283,19 @@ public class WiresShapeTest
 
         assertNull(tested.loadControls(CONNECTOR));
         assertNull(tested.getControls());
+        verify(path).getControlHandles(CONNECTOR);
+        verify(tested, never()).createControlHandles(eq(CONNECTOR), any(ControlHandleList.class));
 
         assertNotNull(tested.loadControls(RESIZE));
         assertNotNull(tested.getControls());
+        verify(path).getControlHandles(RESIZE);
+        verify(tested).createControlHandles(eq(RESIZE), any(ControlHandleList.class));
+
 
         assertNotNull(tested.loadControls(POINT));
         assertNotNull(tested.getControls());
+        verify(path).getControlHandles(POINT);
+        verify(tested, never()).createControlHandles(eq(POINT), any(ControlHandleList.class));
     }
 
     @Test
@@ -299,8 +310,6 @@ public class WiresShapeTest
     @Test
     public void testRefresh()
     {
-        tested = spy(tested);
-
         final WiresShapeControlHandleList controls = mock(WiresShapeControlHandleList.class);
         doReturn(controls).when(tested).createControlHandles(eq(RESIZE), any(ControlHandleList.class));
 

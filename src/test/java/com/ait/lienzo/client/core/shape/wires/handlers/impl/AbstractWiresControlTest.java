@@ -30,6 +30,7 @@ import com.ait.lienzo.client.core.types.Point2D;
 import org.mockito.Mock;
 
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public abstract class AbstractWiresControlTest {
@@ -73,7 +74,7 @@ public abstract class AbstractWiresControlTest {
         layer = new Layer();
         pickerOptions = new ColorMapBackedPicker.PickerOptions(false, 0);
         manager = WiresManager.get(layer);
-        shape = new WiresShape(new MultiPath().rect(0, 0, SHAPE_SIZE, SHAPE_SIZE));
+        shape = spy(new WiresShape(new MultiPath().rect(0, 0, SHAPE_SIZE, SHAPE_SIZE)));
         shape.setWiresManager(manager);
         shape.setControl(shapeControl);
         parent = new WiresShape(new MultiPath().rect(0, 0, PARENT_SIZE, PARENT_SIZE));
