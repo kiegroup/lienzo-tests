@@ -19,6 +19,7 @@ package com.ait.lienzo.client.core.suite;
 import com.ait.lienzo.client.core.image.ImageElementProxyTest;
 import com.ait.lienzo.client.core.image.ImageStripsTest;
 import com.ait.lienzo.client.core.image.ImageTest;
+import com.ait.lienzo.client.core.shape.BezierCurveTest;
 import com.ait.lienzo.client.core.shape.BoundingBoxComputationsTest;
 import com.ait.lienzo.client.core.shape.MultiPathTest;
 import com.ait.lienzo.client.core.shape.PolyLineTest;
@@ -45,6 +46,7 @@ import org.junit.runners.Suite;
         LienzoPanelTest.class,
         MultiPathTest.class,
         PolyLineTest.class,
+        BezierCurveTest.class,
         TextBoundsWrapTest.class,
         TextLineBreakWrapTest.class
 })

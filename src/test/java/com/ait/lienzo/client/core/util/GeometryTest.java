@@ -167,6 +167,18 @@ public class GeometryTest {
     }
 
     @Test
+    public void testIntersectLineCurve() {
+        final double[] xval = new double[]{50, 230, 150, 50};
+        final double[] yval = new double[]{20, 30, 60, 100};
+        final double[] lx = new double[]{0, 250};
+        final double[] ly = new double[]{0, 100};
+        Point2DArray result = Geometry.intersectLineCurve(xval, yval, lx, ly);
+        assertEquals(2, result.size());
+        assertEquals(new Point2D(50d, 20d), result.get(0));
+        assertEquals(new Point2D(144.49725985049355d, 57.79890394019752d), result.get(1));
+    }
+
+    @Test
     public void testIntersectLineCircle() {
         Point2DArray result = Geometry.intersectLineCircle(new Point2D(0d, 0d),
                                                            new Point2D(1d, 1d),
