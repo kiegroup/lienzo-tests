@@ -133,9 +133,6 @@ public class WiresConnectorControlImplTest {
 
         line = spy(new PolyLine(CP0, CP1, CP2, CP3, CP4));
 
-//        connector = spy(new WiresConnector(line,
-//                                           headDecorator,
-//                                           tailDecorator));
         connector = spy(new WiresConnector(headMagnet, tailMagnet, line, headDecorator, tailDecorator));
         connector.addToLayer(layer);
         connector.getGroup().setDragBounds(DRAG_BOUNDS);
