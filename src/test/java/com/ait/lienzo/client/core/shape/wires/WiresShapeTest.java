@@ -250,7 +250,7 @@ public class WiresShapeTest
         final WiresShape shape = spy(new WiresShape(path, layoutContainer));
         final WiresShapeControl shapeControl = mock(WiresShapeControl.class);
         doReturn(controls).when(shape).getControls();
-        shape.setWiresShapeControl(shapeControl);
+        shape.setControl(shapeControl);
         shape.destroy();
 
         verify(layoutContainer).destroy();

@@ -108,7 +108,7 @@ public class WiresManagerTest
         final WiresShapeControl shapeControl = spied.register(shape);
         assertNotNull(shapeControl);
         assertNotNull(tested.getShape(shape.uuid()));
-        verify(shape, times(1)).setWiresShapeControl(any(WiresShapeControl.class));
+        verify(shape, times(1)).setControl(any(WiresShapeControl.class));
         verify(layer, times(1)).add(eq(shape.getGroup()));
         verify(handlerRegistrationManager, times(6)).register(any(HandlerRegistration.class));
         verify(shape).addWiresResizeStartHandler(any(WiresResizeStartHandler.class));

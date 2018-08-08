@@ -172,7 +172,6 @@ public class WiresShapeControlImplTest extends AbstractWiresControlTest {
         when(connector.getTail()).thenReturn(tail);
         when(head.getLocation()).thenReturn(new Point2D(1, 1));
         when(tail.getLocation()).thenReturn(new Point2D(2, 2));
-        when(alignAndDistributeControl.isDraggable()).thenReturn(true);
 
         tested = new WiresShapeControlImpl(parentPicker, m_magnetsControl, m_dockingAndControl, m_containmentControl);
         tested.setAlignAndDistributeControl(alignAndDistributeControl);

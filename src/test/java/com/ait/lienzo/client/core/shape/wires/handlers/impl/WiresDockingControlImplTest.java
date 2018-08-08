@@ -30,6 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -68,9 +69,10 @@ public class WiresDockingControlImplTest extends AbstractWiresControlTest {
     @Test
     public void testDock() {
         final WiresContainer oldParent = mock(WiresContainer.class);
+        shape.setParent(oldParent);
         shape.setDockedTo(oldParent);
         wiresDockingControl.dock(parent);
-        verify(oldParent, times(1)).remove(eq(shape));
+        verify(oldParent, atLeastOnce()).remove(eq(shape));
         verify(handlerRegistrationManager, times(2)).register(any(HandlerRegistration.class));
         assertEquals(parent, shape.getDockedTo());
     }
