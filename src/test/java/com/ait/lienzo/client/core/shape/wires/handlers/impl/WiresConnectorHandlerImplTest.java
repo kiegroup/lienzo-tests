@@ -61,6 +61,9 @@ public class WiresConnectorHandlerImplTest {
     private Timer clickTimer;
 
     @Mock
+    private Timer mouseDownTimer;
+
+    @Mock
     private Consumer<Event> doubleClickEventConsumer;
 
     private WiresConnectorHandlerImpl tested;
@@ -72,7 +75,9 @@ public class WiresConnectorHandlerImplTest {
                                                wiresManager,
                                                clickEventConsumer,
                                                doubleClickEventConsumer,
-                                               clickTimer);
+                                               doubleClickEventConsumer,
+                                               clickTimer,
+                                               mouseDownTimer);
     }
 
     @Test
@@ -149,5 +154,4 @@ public class WiresConnectorHandlerImplTest {
         when(context.getDragStartY()).thenReturn(2);
         return context;
     }
-
 }
