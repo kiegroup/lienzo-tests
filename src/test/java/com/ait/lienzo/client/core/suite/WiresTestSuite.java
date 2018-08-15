@@ -17,6 +17,8 @@
 package com.ait.lienzo.client.core.suite;
 
 import com.ait.lienzo.client.core.shape.AbstractOffsetMultiPointShapeTest;
+import com.ait.lienzo.client.core.shape.decorator.MagnetDecoratorTest;
+import com.ait.lienzo.client.core.shape.decorator.PointHandleDecoratorTest;
 import com.ait.lienzo.client.core.shape.wires.BackingColorMapUtilsTest;
 import com.ait.lienzo.client.core.shape.wires.MagnetManagerTest;
 import com.ait.lienzo.client.core.shape.wires.SelectionManagerTest;
@@ -71,8 +73,9 @@ import org.junit.runners.Suite;
         AlignAndDistributeControlImplTest.class,
         WiresContainmentControlImplTest.class,
         BackingColorMapUtilsTest.class,
-        ColorMapBackedPickerTest.class
-
+        ColorMapBackedPickerTest.class,
+        MagnetDecoratorTest.class,
+        PointHandleDecoratorTest.class
 })
 public class WiresTestSuite {
 
