@@ -20,6 +20,12 @@ import com.ait.lienzo.client.core.event.NodeDragMoveEvent;
 import com.ait.lienzo.client.core.event.NodeDragStartEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickEvent;
+import com.ait.lienzo.client.core.event.NodeMouseDownEvent;
+import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
+import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
+import com.ait.lienzo.client.core.shape.IDirectionalMultiPointShape;
+import com.ait.lienzo.client.core.shape.Layer;
+import com.ait.lienzo.client.core.shape.decorator.PointHandleDecorator;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControl;
@@ -61,23 +67,31 @@ public class WiresConnectorHandlerImplTest {
     private Timer clickTimer;
 
     @Mock
-    private Timer mouseDownTimer;
-
-    @Mock
-    private Consumer<Event> doubleClickEventConsumer;
+    private Consumer<Event> mouseDownConsumer;
 
     private WiresConnectorHandlerImpl tested;
+
+    @Mock
+    private PointHandleDecorator pointHandleDecorator;
+
+    @Mock
+    private IDirectionalMultiPointShape line;
+
+    @Mock
+    private Layer layer;
 
     @Before
     public void setup() {
         when(connector.getControl()).thenReturn(control);
+        when(control.areControlPointsVisible()).thenReturn(true);
+        when(connector.getLine()).thenReturn(line);
+        when(line.getLayer()).thenReturn(layer);
         tested = new WiresConnectorHandlerImpl(connector,
                                                wiresManager,
+                                               pointHandleDecorator,
                                                clickEventConsumer,
-                                               doubleClickEventConsumer,
-                                               doubleClickEventConsumer,
-                                               clickTimer,
-                                               mouseDownTimer);
+                                               mouseDownConsumer,
+                                               clickTimer);
     }
 
     @Test
@@ -137,15 +151,17 @@ public class WiresConnectorHandlerImplTest {
         tested.onNodeMouseClick(event);
         verify(clickTimer, times(1)).cancel();
         verify(clickTimer, times(1)).schedule(anyInt());
-        verify(doubleClickEventConsumer, never()).accept(any(Event.class));
+        verify(mouseDownConsumer, never()).accept(any(Event.class));
     }
 
     @Test
-    public void testOnNodeMouseDoubleClick() {
-        NodeMouseDoubleClickEvent event = mock(NodeMouseDoubleClickEvent.class);
-        tested.onNodeMouseDoubleClick(event);
-        verify(doubleClickEventConsumer, times(1)).accept(any(Event.class));
-        verify(clickEventConsumer, never()).accept(any(Event.class));
+    public void testAddControlPoint() {
+        NodeMouseMoveEvent event = mock(NodeMouseMoveEvent.class);
+
+        tested.onNodeMouseMove(event);
+
+
+
     }
 
     private static DragContext mockDragContext() {
