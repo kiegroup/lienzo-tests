@@ -30,6 +30,8 @@ import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControl;
 import com.ait.lienzo.client.core.shape.wires.handlers.impl.WiresConnectorHandlerImpl.Event;
+import com.ait.lienzo.client.core.types.Point2D;
+import com.ait.lienzo.client.core.types.Point2DArray;
 import com.ait.lienzo.client.widget.DragContext;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.ait.tooling.common.api.java.util.function.Consumer;
@@ -80,15 +82,18 @@ public class WiresConnectorHandlerImplTest {
     @Mock
     private Layer layer;
 
+    private Point2DArray linePoints;
+
     @Before
     public void setup() {
+        linePoints = new Point2DArray(new Point2D(0,0), new Point2D(1,1));
         when(connector.getControl()).thenReturn(control);
         when(control.areControlPointsVisible()).thenReturn(true);
         when(connector.getLine()).thenReturn(line);
         when(line.getLayer()).thenReturn(layer);
+        when(line.getPoint2DArray()).thenReturn(linePoints);
         tested = new WiresConnectorHandlerImpl(connector,
                                                wiresManager,
-                                               pointHandleDecorator,
                                                clickEventConsumer,
                                                mouseDownConsumer,
                                                clickTimer);
@@ -156,12 +161,9 @@ public class WiresConnectorHandlerImplTest {
 
     @Test
     public void testAddControlPoint() {
+        //TODO:improve the tests here
         NodeMouseMoveEvent event = mock(NodeMouseMoveEvent.class);
-
         tested.onNodeMouseMove(event);
-
-
-
     }
 
     private static DragContext mockDragContext() {
