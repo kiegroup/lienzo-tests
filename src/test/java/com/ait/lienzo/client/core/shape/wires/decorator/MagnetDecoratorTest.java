@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ait.lienzo.client.core.shape.decorator;
+package com.ait.lienzo.client.core.shape.wires.decorator;
 
 import com.ait.lienzo.client.core.shape.Circle;
 import com.ait.lienzo.client.core.shape.Shape;
@@ -23,7 +23,6 @@ import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
