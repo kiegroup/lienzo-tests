@@ -15,6 +15,8 @@
  */
 package com.ait.lienzo.client.core.shape.wires.handlers.impl;
 
+import java.util.HashSet;
+
 import com.ait.lienzo.client.core.event.NodeDragEndEvent;
 import com.ait.lienzo.client.core.event.NodeDragMoveEvent;
 import com.ait.lienzo.client.core.event.NodeDragStartEvent;
@@ -22,11 +24,14 @@ import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.shape.IDirectionalMultiPointShape;
 import com.ait.lienzo.client.core.shape.Layer;
+import com.ait.lienzo.client.core.shape.wires.SelectionManager;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.decorator.PointHandleDecorator;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControl;
 import com.ait.lienzo.client.core.shape.wires.handlers.impl.WiresConnectorHandlerImpl.Event;
+import com.ait.lienzo.client.core.types.BoundingBox;
+import com.ait.lienzo.client.core.types.BoundingPoints;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.client.core.types.Point2DArray;
 import com.ait.lienzo.client.widget.DragContext;
@@ -81,14 +86,27 @@ public class WiresConnectorHandlerImplTest {
 
     private Point2DArray linePoints;
 
+    @Mock
+    private SelectionManager selectionManager;
+
+    @Mock
+    private SelectionManager.SelectedItems selectedItems;
+
+    private BoundingBox boundingBox;
+
     @Before
     public void setup() {
         linePoints = new Point2DArray(new Point2D(0,0), new Point2D(1,1));
+        boundingBox = new BoundingBox();
         when(connector.getControl()).thenReturn(control);
         when(control.areControlPointsVisible()).thenReturn(true);
         when(connector.getLine()).thenReturn(line);
         when(line.getLayer()).thenReturn(layer);
         when(line.getPoint2DArray()).thenReturn(linePoints);
+        when(line.getComputedBoundingPoints()).thenReturn(new BoundingPoints(boundingBox));
+        when(wiresManager.getSelectionManager()).thenReturn(selectionManager);
+        when(selectionManager.getSelectedItems()).thenReturn(selectedItems);
+        when(selectedItems.getConnectors()).thenReturn(new HashSet<WiresConnector>());
         tested = new WiresConnectorHandlerImpl(connector,
                                                wiresManager,
                                                clickEventConsumer,
