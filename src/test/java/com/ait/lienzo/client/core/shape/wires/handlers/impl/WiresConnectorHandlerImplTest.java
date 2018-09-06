@@ -26,6 +26,7 @@ import com.ait.lienzo.client.core.shape.IDirectionalMultiPointShape;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.wires.SelectionManager;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
+import com.ait.lienzo.client.core.shape.wires.WiresLayer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.decorator.PointHandleDecorator;
 import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControl;
@@ -94,6 +95,9 @@ public class WiresConnectorHandlerImplTest {
 
     private BoundingBox boundingBox;
 
+    @Mock
+    private WiresLayer wiresLayer;
+
     @Before
     public void setup() {
         linePoints = new Point2DArray(new Point2D(0,0), new Point2D(1,1));
@@ -107,6 +111,8 @@ public class WiresConnectorHandlerImplTest {
         when(wiresManager.getSelectionManager()).thenReturn(selectionManager);
         when(selectionManager.getSelectedItems()).thenReturn(selectedItems);
         when(selectedItems.getConnectors()).thenReturn(new HashSet<WiresConnector>());
+        when(wiresManager.getLayer()).thenReturn(wiresLayer);
+        when(wiresLayer.getLayer()).thenReturn(layer);
         tested = new WiresConnectorHandlerImpl(connector,
                                                wiresManager,
                                                clickEventConsumer,
