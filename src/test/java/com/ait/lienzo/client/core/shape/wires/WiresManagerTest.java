@@ -37,6 +37,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -62,11 +63,19 @@ public class WiresManagerTest
 
     private Layer               layer;
 
+    @Mock
+    private Viewport            viewport;
+
+    @Mock
+    private Layer               overLayer;
+
     @Before
     public void setup()
     {
         layer = spy(new Layer());
         layer.setID(LAYER_ID);
+        when(layer.getViewport()).thenReturn(viewport);
+        when(viewport.getOverLayer()).thenReturn(overLayer);
         tested = WiresManager.get(layer);
     }
 
