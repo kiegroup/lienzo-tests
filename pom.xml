@@ -31,10 +31,10 @@
   <properties>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <version.com.google.gwt>2.7.0</version.com.google.gwt>
+    <version.com.google.gwt>2.8.2</version.com.google.gwt>
     <version.junit>4.11</version.junit>
-    <version.org.mockito>1.9.5</version.org.mockito>
-    <version.org.javassist>3.17.1-GA</version.org.javassist>
+    <version.org.mockito>1.10.19</version.org.mockito>
+    <version.org.javassist>3.20.0-GA</version.org.javassist>
     <version.com.google.gwt.gwtmockito>1.1.6</version.com.google.gwt.gwtmockito>
 
   </properties>
