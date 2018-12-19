@@ -101,6 +101,19 @@ public class WiresDockingControlImplTest extends AbstractWiresControlTest {
     }
 
     @Test
+    public void testGetCandidateLocation() {
+        wiresDockingControl.dock(parent);
+        Point2D candidateLocation = wiresDockingControl.getCandidateLocation();
+        assertEquals((SHAPE_SIZE / 2) * -1, candidateLocation.getX(), 0d);
+        assertEquals((SHAPE_SIZE / 2) * -1, candidateLocation.getY(), 0d);
+    }
+
+    @Test
+    public void testNoCandidateParentSoNoLocation() {
+        assertNull(wiresDockingControl.getCandidateLocation());
+    }
+
+    @Test
     public void testDestroy() {
         wiresDockingControl.destroy();
         verify(handlerRegistrationManager, times(1)).destroy();
