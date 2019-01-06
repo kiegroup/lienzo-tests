@@ -67,6 +67,13 @@ public class WiresDockingControlImplTest extends AbstractWiresControlTest {
     }
 
     @Test
+    public void getAdjustWhenNoIntercepting() {
+        Point2D adjust = wiresDockingControl.getAdjust();
+        assertEquals(adjust.getX(), 0, 0);
+        assertEquals(adjust.getY(), 0, 0);
+    }
+
+    @Test
     public void testDock() {
         final WiresContainer oldParent = mock(WiresContainer.class);
         shape.setParent(oldParent);
