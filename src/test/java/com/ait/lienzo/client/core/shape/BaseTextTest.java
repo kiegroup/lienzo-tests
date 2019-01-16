@@ -33,6 +33,10 @@ import static org.mockito.Mockito.*;
 
 public abstract class BaseTextTest {
 
+    protected static final double OFFSET_X = 10.0;
+
+    protected static final double OFFSET_Y = 20.0;
+
     @Mock
     protected Context2D context;
 

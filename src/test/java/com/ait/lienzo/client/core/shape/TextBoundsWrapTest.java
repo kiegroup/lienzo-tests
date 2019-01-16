@@ -32,42 +32,51 @@ public class TextBoundsWrapTest extends BaseTextTest {
     @Test
     public void testTextBoundsWrap() {
         testTextBoundsWrap("very long text that should wrap",
+                           OFFSET_X,
+                           OFFSET_Y,
                            new Object[]{
                                    new DrawnText("very long ",
-                                                 0,
-                                                 0.8),
+                                                 OFFSET_X,
+                                                 OFFSET_Y + 0.8),
                                    new DrawnText("text that ",
-                                                 0,
-                                                 1.8),
+                                                 OFFSET_X,
+                                                 OFFSET_Y + 1.8),
                                    new DrawnText("should    ",
-                                                 0,
-                                                 2.8),
+                                                 OFFSET_X,
+                                                 OFFSET_Y + 2.8),
                                    new DrawnText("wrap      ",
-                                                 0,
-                                                 3.8)
+                                                 OFFSET_X,
+                                                 OFFSET_Y + 3.8)
                            });
     }
 
     @Test
     public void testTextBoundsWrapOneWord() {
         testTextBoundsWrap("very",
+                           OFFSET_X,
+                           OFFSET_Y,
                            new Object[]{
                                    new DrawnText("very      ",
-                                                 0,
-                                                 0.8)
+                                                 OFFSET_X,
+                                                 OFFSET_Y + 0.8)
                            });
     }
 
     @Test
     public void testTextBoundsWrapWhiteSpace() {
         testTextBoundsWrap("   ",
+                           OFFSET_X,
+                           OFFSET_Y,
                            new Object[]{});
     }
 
     private void testTextBoundsWrap(final String text,
+                                    final double x,
+                                    final double y,
                                     final Object[] results) {
         BoundingBox bbox = new BoundingBox().addX(0).addY(0).addX(10).addY(10);
-        Text tested = spy(new Text(text));
+        Text wrapped = new Text(text).setX(x).setY(y);
+        Text tested = spy(wrapped);
 
         tested.setWrapper(new TextBoundsWrap(tested,
                                              bbox));

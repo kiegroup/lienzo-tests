@@ -32,42 +32,51 @@ public class TextLineBreakWrapTest extends BaseTextTest {
     @Test
     public void testTextLineBreakWrapN() {
         testLineBreakWrap("very long text \nthat should wrap",
+                          OFFSET_X,
+                          OFFSET_Y,
                           new Object[]{
                                   new DrawnText("very long text ",
-                                                0,
-                                                0.8),
+                                                OFFSET_X,
+                                                OFFSET_Y + 0.8),
                                   new DrawnText("that should wrap",
-                                                0,
-                                                1.8)
+                                                OFFSET_X,
+                                                OFFSET_Y + 1.8)
                           });
     }
 
     @Test
     public void testTextLineBreakWrapRN() {
         testLineBreakWrap("very long text \r\nthat should wrap",
+                          OFFSET_X,
+                          OFFSET_Y,
                           new Object[]{
                                   new DrawnText("very long text ",
-                                                0,
-                                                0.8),
+                                                OFFSET_X,
+                                                OFFSET_Y + 0.8),
                                   new DrawnText("that should wrap",
-                                                0,
-                                                1.8)
+                                                OFFSET_X,
+                                                OFFSET_Y + 1.8)
                           });
     }
 
     @Test
     public void testTextLineBreakWrapNoLineBreaks() {
         testLineBreakWrap("very long text",
+                          OFFSET_X,
+                          OFFSET_Y,
                           new Object[]{
                                   new DrawnText("very long text",
-                                                0,
-                                                0.8)
+                                                OFFSET_X,
+                                                OFFSET_Y + 0.8)
                           });
     }
 
     private void testLineBreakWrap(final String text,
+                                   final double x,
+                                   final double y,
                                    final Object[] results) {
-        final Text tested = spy(new Text(text));
+        final Text wrapped = new Text(text).setX(x).setY(y);
+        final Text tested = spy(wrapped);
         tested.setWrapper(new TextLineBreakWrap(tested));
         tested.setTextAlign(TextAlign.LEFT);
 
