@@ -58,6 +58,10 @@ public class WiresShapeLocationBoundsTest {
         assertFalse(tested.isOutOfBounds(-1d, -1d));
         assertFalse(tested.isOutOfBounds(700d, 600d));
         assertTrue(tested.isOutOfBounds(-3d, -3d));
+        assertTrue(tested.isOutOfBounds(-3d, 0d));
+        assertTrue(tested.isOutOfBounds(0d, -3d));
+        assertTrue(tested.isOutOfBounds(0d, 1000d));
+        assertTrue(tested.isOutOfBounds(1000d, 0d));
         assertTrue(tested.isOutOfBounds(1000d, 1000d));
     }
 

@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 public class OptionalBoundsTest {
 
     @Test
-    public void testInstance() {
+    public void testInstanceCreation() {
         OptionalBounds allBounds = OptionalBounds.create(1.1d, 2.2d, 3.3d, 4.4d);
         assertTrue(allBounds.hasMinX());
         assertTrue(allBounds.hasMinY());
@@ -57,4 +57,29 @@ public class OptionalBoundsTest {
         assertNull(emptyBounds.getMaxX());
         assertNull(emptyBounds.getMaxY());
     }
+
+    @Test
+    public void testConditions() {
+        OptionalBounds bounds = OptionalBounds.create(0d, 0d, 55.5d, 77.35d);
+        assertTrue(bounds.lessOrEqualThanMinX(0d));
+        assertTrue(bounds.lessOrEqualThanMinX(-0.1d));
+        assertFalse(bounds.lessOrEqualThanMinX(0.1d));
+
+        assertTrue(bounds.lessOrEqualThanMinY(0d));
+        assertTrue(bounds.lessOrEqualThanMinY(-0.1d));
+        assertFalse(bounds.lessOrEqualThanMinY(0.1d));
+
+        assertTrue(bounds.biggerOrEqualThanMaxX(55.6d));
+        assertTrue(bounds.biggerOrEqualThanMaxX(55.5d));
+        assertTrue(bounds.biggerOrEqualThanMaxX(5511d));
+        assertFalse(bounds.biggerOrEqualThanMaxX(55.45d));
+        assertFalse(bounds.biggerOrEqualThanMaxX(0d));
+
+        assertTrue(bounds.biggerOrEqualThanMaxY(77.35d));
+        assertTrue(bounds.biggerOrEqualThanMaxX(77.351d));
+        assertTrue(bounds.biggerOrEqualThanMaxX(5511d));
+        assertFalse(bounds.biggerOrEqualThanMaxX(55.45d));
+        assertFalse(bounds.biggerOrEqualThanMaxX(0d));
+    }
+
 }
