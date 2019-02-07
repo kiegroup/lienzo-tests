@@ -25,7 +25,6 @@ import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.types.ImageDataPixelColor;
 import com.ait.lienzo.client.core.types.PathPartList;
 import com.ait.lienzo.client.core.types.Point2D;
-import com.ait.lienzo.client.core.types.Transform;
 import com.ait.lienzo.client.core.util.ScratchPad;
 import com.ait.lienzo.shared.core.types.Color;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
@@ -96,7 +95,8 @@ public class ColorMapBackedPickerTest {
         when(pixelColor.toBrowserRGB()).thenReturn(Color.rgbToBrowserHexColor(0, 0, 0));
         when(pickerPart.getShape()).thenReturn(shape);
 
-        tested = new ColorMapBackedPicker(shapes, scratchPad, pickerOptions);
+        tested = new ColorMapBackedPicker(scratchPad, pickerOptions);
+        tested.build(shapes);
     }
 
     @Test
