@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -214,9 +215,7 @@ public class TextTruncateWrapperTest extends BaseTextTest {
 
         when(tested.getLineHeight(context)).thenReturn(1.0);
         tested.getBoundingBox();
-        assertEquals(bbox.getWidth(),
-                     tested.getBoundingBox().getWidth(),
-                     0.0001);
+        assertTrue(bbox.getWidth() >= tested.getBoundingBox().getWidth());
 
         tested.drawWithTransforms(context,
                                   1,

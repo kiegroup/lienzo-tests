@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -103,7 +103,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  1.8),
                            },
                            28,
-                           4);
+                           getLineHeight(2));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  3.8)
                            },
                            28,
-                           8);
+                           getLineHeight(4));
     }
 
     @Test
@@ -139,7 +139,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  1.8)
                            },
                            28,
-                           4);
+                           getLineHeight(2));
     }
 
     @Test
@@ -154,13 +154,13 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  1.8)
                            },
                            25,
-                           4);
+                           getLineHeight(2));
     }
 
     @Test
     public void testLineBreak(){
         testTextBoundsWrap("Word1\nWord2\nWord3 Word4 Word5 Word6 Word7",
-                new Object[]{
+                           new Object[]{
                         new DrawnText("Word1",
                                 0,
                                 0.8),
@@ -171,8 +171,12 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                 0,
                                 2.8)
                 },
-                50,
-                6);
+                           50,
+                           getLineHeight(3));
+    }
+
+    private int getLineHeight(int num) {
+        return num * 2 + 1;
     }
 
     @Test
@@ -190,13 +194,13 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  2.8)
                 },
                            50,
-                           6);
+                           getLineHeight(3));
     }
 
     @Test
     public void testLineBreakTruncated(){
         testTextBoundsWrap("Word1\nWord2\nWord3 Word4 Word5 Word6 Word7",
-                new Object[]{
+                           new Object[]{
                         new DrawnText("Word1",
                                 0,
                                 0.8),
@@ -210,8 +214,8 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                 0,
                                 3.8)
                 },
-                25,
-                7);
+                           25,
+                           getLineHeight(4));
     }
 
     private void testTextBoundsWrap(final String text,
@@ -232,15 +236,14 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
         final BoundingBox bbox = new BoundingBox().addX(0).addY(0).addX(width).addY(height);
         final Text tested = spy(new Text(text));
 
-        tested.setWrapper(new TextLineBreakTruncateWrapper(tested,
-                                                  bbox));
+        TextLineBreakTruncateWrapper wrapper = new TextLineBreakTruncateWrapper(tested,
+                                                                                bbox);
+        tested.setWrapper(wrapper);
         tested.setTextAlign(TextAlign.LEFT);
 
         when(tested.getLineHeight(context)).thenReturn(1.0);
         tested.getBoundingBox();
-        assertEquals(bbox.getWidth(),
-                     tested.getBoundingBox().getWidth(),
-                     0.0001);
+        assertTrue(bbox.getWidth() >= tested.getBoundingBox().getWidth());
 
         tested.drawWithTransforms(context,
                                   1,
