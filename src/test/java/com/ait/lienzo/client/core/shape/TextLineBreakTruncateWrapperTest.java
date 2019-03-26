@@ -62,7 +62,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  0,
                                                  0.8)
                            },
-                           28);
+                           getWidth(8));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  0,
                                                  1.8)
                            },
-                           28);
+                           getWidth(8));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  0,
                                                  0.8)
                            },
-                           22,
+                           getWidth(2),
                            2);
     }
 
@@ -102,7 +102,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  0,
                                                  1.8),
                            },
-                           28,
+                           getWidth(8),
                            getLineHeight(2));
     }
 
@@ -123,7 +123,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  0,
                                                  3.8)
                            },
-                           28,
+                           getWidth(8),
                            getLineHeight(4));
     }
 
@@ -138,7 +138,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  0,
                                                  1.8)
                            },
-                           28,
+                           getWidth(8),
                            getLineHeight(2));
     }
 
@@ -153,7 +153,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  0,
                                                  1.8)
                            },
-                           25,
+                           getWidth(5),
                            getLineHeight(2));
     }
 
@@ -171,7 +171,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                 0,
                                 2.8)
                 },
-                           50,
+                           getWidth(30),
                            getLineHeight(3));
     }
 
@@ -193,7 +193,7 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                                  0,
                                                  2.8)
                 },
-                           50,
+                           getWidth(30),
                            getLineHeight(3));
     }
 
@@ -214,13 +214,18 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
                                 0,
                                 3.8)
                 },
-                           25,
+                           getWidth(5),
                            getLineHeight(4));
     }
 
     private void testTextBoundsWrap(final String text,
                                     final Object[] results) {
-        testTextBoundsWrap(text, results, 26);
+        testTextBoundsWrap(text, results, getWidth(6));
+    }
+
+    private double getWidth(double width) {
+        //adding margin
+        return 10 + width;
     }
 
     private void testTextBoundsWrap(final String text,
