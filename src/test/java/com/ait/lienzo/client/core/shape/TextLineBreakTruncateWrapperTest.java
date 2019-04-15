@@ -83,12 +83,30 @@ public class TextLineBreakTruncateWrapperTest extends BaseTextTest {
     public void testTruncateSingleWord() {
         testTextBoundsWrap("LongWordThatDoesntFits",
                            new Object[]{
-                                   new DrawnText("Lon...",
+                                   new DrawnText("L...",
                                                  0,
                                                  0.8)
                            },
-                           getWidth(2),
+                           getWidth(4),
                            2);
+    }
+
+    @Test
+    public void testTruncateSingleWordTruncatedWithNoDots() {
+        testTextBoundsWrap("LongWordThatDoesntFits",
+                           new Object[]{
+                                   new DrawnText("Lon",
+                                                 0,
+                                                 0.8),
+                                   new DrawnText("gWo",
+                                                 0,
+                                                 1.8),
+                                   new DrawnText("rdT",
+                                                 0,
+                                                 2.8)
+                           },
+                           getWidth(2),
+                           8);
     }
 
     @Test
