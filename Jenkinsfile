@@ -33,10 +33,12 @@ pipeline {
                 }
             }
         }
-        stage('Build lienzo-test') {
+        stage('Build lienzo-tests') {
             steps {
-                script {
-                    maven.runMavenWithSubmarineSettings('clean install', false)
+                dir("lienzo-tests") {
+                    script {
+                        maven.runMavenWithSubmarineSettings('clean install', true)
+                    }
                 }
             }
         }
