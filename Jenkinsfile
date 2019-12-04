@@ -25,6 +25,8 @@ pipeline {
         }
         stage('Build lienzo-tests 1') {
             steps {
+                sh 'ls'
+                sh 'pwd'
                 script {
                     maven.runMavenWithSubmarineSettings('clean install', false)
                 }
