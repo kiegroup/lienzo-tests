@@ -18,15 +18,6 @@ pipeline {
                 sh 'printenv'
             }
         }
-        stage('Build lienzo-tests 1') {
-            steps {
-                sh 'ls'
-                sh 'pwd'
-                script {
-                    maven.runMavenWithSubmarineSettings('clean install', false)
-                }
-            }
-        }
         stage('Build lienzo-core') {
             steps {
                 dir("lienzo-core") {
@@ -37,12 +28,12 @@ pipeline {
                 }
             }
         }
-        stage('Build lienzo-tests 2') {
+        stage('Build lienzo-tests') {
             steps {
-                dir("$WORKSPACE") {
-                    script {
-                        maven.runMavenWithSubmarineSettings('clean install', true)
-                    }
+                sh 'ls'
+                sh 'pwd'
+                script {
+                    maven.runMavenWithSubmarineSettings('clean install', false)
                 }
             }
         }
