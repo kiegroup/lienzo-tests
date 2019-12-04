@@ -13,11 +13,6 @@ pipeline {
         timeout(time: 10, unit: 'MINUTES')
     }
     stages {
-        stage('CleanWorkspace') {
-          steps {
-            cleanWs()
-          }
-        }
         stage('Initialize') {
             steps {
                 sh 'printenv'
