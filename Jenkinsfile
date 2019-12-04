@@ -13,6 +13,11 @@ pipeline {
         // timeout(time: 90, unit: 'MINUTES')
     }
     stages {
+        stage('CleanWorkspace') {
+          steps {
+            cleanWs()
+          }
+        }
         stage('Initialize') {
             steps {
                 sh 'printenv'
@@ -22,9 +27,16 @@ pipeline {
             steps {
                 dir("lienzo-core") {
                     script {
-                        githubscm.checkoutIfExists('lienzo-core', "$CHANGE_AUTHOR", "$CHANGE_BRANCH", 'ginxo', "$CHANGE_TARGET")
+                        githubscm.checkoutIfExists('lienzo-core', "$CHANGE_AUTHOR", "$CHANGE_BRANCH", 'kiegroup', "$CHANGE_TARGET")
                         maven.runMavenWithSubmarineSettings('clean install', true)
                     }
+                }
+            }
+        }
+        stage('Build lienzo-test') {
+            steps {
+                script {
+                    maven.runMavenWithSubmarineSettings('clean install', false)
                 }
             }
         }
