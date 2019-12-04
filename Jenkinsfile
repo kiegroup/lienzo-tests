@@ -35,7 +35,7 @@ pipeline {
         }
         stage('Build lienzo-tests') {
             steps {
-                dir("$PWD") {
+                dir("$WORKSPACE") {
                     script {
                         maven.runMavenWithSubmarineSettings('clean install', true)
                     }
