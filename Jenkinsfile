@@ -10,7 +10,7 @@ pipeline {
     }
     options {
         buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')
-        timeout(time: 10, unit: 'MINUTES')
+        timeout(time: 5, unit: 'MINUTES')
     }
     stages {
         stage('Initialize') {
@@ -18,20 +18,10 @@ pipeline {
                 sh 'printenv'
             }
         }
-        stage('Build lienzo-core') {
-            steps {
-                dir("lienzo-core") {
-                    script {
-                        githubscm.checkoutIfExists('lienzo-core', "$CHANGE_AUTHOR", "$CHANGE_BRANCH", 'kiegroup', "$CHANGE_TARGET")
-                        maven.runMavenWithSubmarineSettings('clean install', true)
-                    }
-                }
-            }
-        }
-        stage('Build lienzo-tests') {
+        stage('Build lienzo-tests stages') {
             steps {
                 script {
-                    maven.runMavenWithSubmarineSettings('clean install', false)
+                    load("$WORKSPACE/build.stages")
                 }
             }
         }
