@@ -1,20 +1,18 @@
-node('submarine-static || kie-rhel7') {
-    stage('Initialize') {
+stage('Initialize') {
+    script {
+        githubscm.checkoutIfExists('lienzo-tests', "$CHANGE_AUTHOR", "$CHANGE_BRANCH", 'kiegroup', "$CHANGE_TARGET")
+    }
+}    
+stage('Build lienzo-core') {
+    dir("lienzo-core") {
         script {
-            githubscm.checkoutIfExists('lienzo-tests', "$CHANGE_AUTHOR", "$CHANGE_BRANCH", 'kiegroup', "$CHANGE_TARGET")
-        }
-    }    
-    stage('Build lienzo-core') {
-        dir("lienzo-core") {
-            script {
-                githubscm.checkoutIfExists('lienzo-core', "$CHANGE_AUTHOR", "$CHANGE_BRANCH", 'kiegroup', "$CHANGE_TARGET")
-                load("build.stages")
-            }
+            githubscm.checkoutIfExists('lienzo-core', "$CHANGE_AUTHOR", "$CHANGE_BRANCH", 'kiegroup', "$CHANGE_TARGET")
+            load("build.stages")
         }
     }
-    stage('Build lienzo-tests') {
-        script {
-            maven.runMavenWithSubmarineSettings('clean install', true)
-        }
+}
+stage('Build lienzo-tests') {
+    script {
+        maven.runMavenWithSubmarineSettings('clean install', true)
     }
 }
