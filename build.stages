@@ -1,8 +1,3 @@
-stage('Initialize') {
-    script {
-        githubscm.checkoutIfExists('lienzo-tests', "$CHANGE_AUTHOR", "$CHANGE_BRANCH", 'kiegroup', "$CHANGE_TARGET")
-    }
-}    
 stage('Build lienzo-core') {
     dir("lienzo-core") {
         script {
@@ -13,6 +8,10 @@ stage('Build lienzo-core') {
 }
 stage('Build lienzo-tests') {
     script {
-        maven.runMavenWithSubmarineSettings('clean install', true)
+        if(!env.kiegroup_lienzo_tests) {
+            githubscm.checkoutIfExists('lienzo-tests', "$CHANGE_AUTHOR", "$CHANGE_BRANCH", 'kiegroup', "$CHANGE_TARGET")
+            maven.runMavenWithSubmarineSettings('clean install', true)
+            env.kiegroup_lienzo_tests = true;
+        }    
     }
 }
