@@ -18,13 +18,13 @@
 
 package com.ait.lienzo.client.core.shape.wires;
 
-import com.ait.lienzo.client.core.event.IAttributesChangedBatcher;
 import com.ait.lienzo.client.core.event.NodeDragEndHandler;
 import com.ait.lienzo.client.core.event.NodeDragMoveHandler;
 import com.ait.lienzo.client.core.event.NodeDragStartHandler;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.MultiPath;
+import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.client.core.shape.wires.event.WiresDragEndEvent;
 import com.ait.lienzo.client.core.shape.wires.event.WiresDragEndHandler;
 import com.ait.lienzo.client.core.shape.wires.event.WiresDragMoveEvent;
@@ -36,9 +36,10 @@ import com.ait.lienzo.client.core.shape.wires.event.WiresMoveHandler;
 import com.ait.lienzo.client.core.shape.wires.handlers.AlignAndDistributeControl;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
-import com.ait.tooling.nativetools.client.collection.NFastArrayList;
-import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
-import com.google.gwt.event.shared.HandlerManager;
+import com.ait.lienzo.tools.client.collection.NFastArrayList;
+import com.ait.lienzo.tools.client.event.HandlerManager;
+import com.ait.lienzo.tools.client.event.HandlerRegistrationManager;
+import elemental2.dom.HTMLDivElement;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,16 +64,18 @@ public class WiresContainerTest
     private HandlerRegistrationManager handlerRegistrationManager;
 
     @Mock
-    private IAttributesChangedBatcher  attributesChangedBatcher;
+    private HandlerManager handlerManager;
 
-    @Mock
-    private HandlerManager             handlerManager;
-
-    @Mock
     private WiresManager               wiresManager;
 
     @Mock
     private AlignAndDistribute         alignAndDistribute;
+
+    @Mock
+    private Layer layer;
+
+    @Mock
+    private Viewport viewport;
 
     @Mock
     private AlignAndDistributeControl  alignAndDistributeControl;
@@ -84,6 +87,8 @@ public class WiresContainerTest
     @Before
     public void setup()
     {
+        when(layer.getViewport()).thenReturn(viewport);
+        wiresManager = spy(WiresManager.get(layer));
         layoutContainerGroup = spy(new Group());
         layoutContainer = spy(new WiresLayoutContainer(layoutContainerGroup));
         when(wiresManager.getAlignAndDistribute()).thenReturn(alignAndDistribute);
@@ -91,8 +96,9 @@ public class WiresContainerTest
         when(layoutContainer.getGroup()).thenReturn(layoutContainerGroup);
         parentContainer = spy(new Group());
         shape = createShape();
-        tested = new WiresContainer(parentContainer, handlerManager, handlerRegistrationManager, attributesChangedBatcher);
+        tested = new WiresContainer(parentContainer, handlerManager, handlerRegistrationManager);
         tested.setWiresManager(wiresManager);
+
     }
 
     @Test
@@ -120,8 +126,8 @@ public class WiresContainerTest
     public void testSetDraggable()
     {
         tested.setDraggable(true);
-        verify(handlerRegistrationManager, times(5)).register(any(HandlerRegistrationManager.class));
-        verify(parentContainer, times(1)).setAttributesChangedBatcher(eq(attributesChangedBatcher));
+        //was 5, 3 coz Attribute change handlers were removed
+        verify(handlerRegistrationManager, times(3)).register(any(HandlerRegistrationManager.class));
         verify(parentContainer, times(1)).addNodeDragStartHandler(any(NodeDragStartHandler.class));
         verify(parentContainer, times(1)).addNodeDragMoveHandler(any(NodeDragMoveHandler.class));
         verify(parentContainer, times(1)).addNodeDragEndHandler(any(NodeDragEndHandler.class));
@@ -167,9 +173,9 @@ public class WiresContainerTest
         final NFastArrayList<WiresShape> children = tested.getChildShapes();
         assertEquals(1, tested.getChildShapes().size());
         assertEquals(tested, children.get(0).getParent());
-        verify(layoutContainerGroup, atLeast(2)).getAttributes();
-        verify(layoutContainerGroup).setX(0);
-        verify(layoutContainerGroup).setY(0);
+
+        assertEquals(0, layoutContainerGroup.getX(), 0);
+        assertEquals(0, layoutContainerGroup.getY(), 0);
     }
 
     @Test
@@ -229,14 +235,9 @@ public class WiresContainerTest
         final WiresContainer handledContainer = createWithRealHandlers().setDraggable(true);
         final Group group = handledContainer.getGroup();
         final Point2D result = new Point2D(0, 0);
-        handledContainer.addWiresDragStartHandler(new WiresDragStartHandler()
-        {
-            @Override
-            public void onShapeDragStart(final WiresDragStartEvent event)
-            {
-                result.setX(event.getX());
-                result.setY(event.getY());
-            }
+        handledContainer.addWiresDragStartHandler(event -> {
+            result.setX(event.getX());
+            result.setY(event.getY());
         });
         EventMockUtils.dragStart(group, 20, 30);
 
@@ -250,15 +251,11 @@ public class WiresContainerTest
         final WiresContainer handledContainer = createWithRealHandlers().setDraggable(true);
         final Group group = handledContainer.getGroup();
         final Point2D result = new Point2D(0, 0);
-        handledContainer.addWiresDragMoveHandler(new WiresDragMoveHandler()
-        {
-            @Override
-            public void onShapeDragMove(final WiresDragMoveEvent event)
-            {
-                result.setX(event.getX());
-                result.setY(event.getY());
-            }
+        handledContainer.addWiresDragMoveHandler(event -> {
+            result.setX(event.getX());
+            result.setY(event.getY());
         });
+
         EventMockUtils.dragMove(group, 20, 30);
 
         assertEquals(20, result.getX(), 0);
@@ -271,14 +268,9 @@ public class WiresContainerTest
         final WiresContainer handledContainer = createWithRealHandlers().setDraggable(true);
         final Group group = handledContainer.getGroup();
         final Point2D result = new Point2D(0, 0);
-        handledContainer.addWiresDragEndHandler(new WiresDragEndHandler()
-        {
-            @Override
-            public void onShapeDragEnd(final WiresDragEndEvent event)
-            {
-                result.setX(event.getX());
-                result.setY(event.getY());
-            }
+        handledContainer.addWiresDragEndHandler(event -> {
+            result.setX(event.getX());
+            result.setY(event.getY());
         });
         EventMockUtils.dragEnd(group, 20, 30);
 
@@ -291,17 +283,18 @@ public class WiresContainerTest
     {
         tested.destroy();
         verify(handlerRegistrationManager, times(1)).removeHandler();
-        verify(attributesChangedBatcher, times(1)).cancelAttributesChangedBatcher();
         verify(parentContainer, times(1)).removeFromParent();
         assertNull(tested.getParent());
     }
 
-    private static WiresContainer createWithRealHandlers()
+    private WiresContainer createWithRealHandlers()
     {
         final Layer layer = new Layer();
         final Group group = new Group();
         layer.add(group);
-        return new WiresContainer(group);
+        WiresContainer wiresContainer = new WiresContainer(group);
+        wiresContainer.setWiresManager(wiresManager);
+        return wiresContainer;
     }
 
     private WiresShape createShape()

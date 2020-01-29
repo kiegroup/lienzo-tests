@@ -17,12 +17,10 @@
 package com.ait.lienzo.client.core.shape.wires.handlers.impl;
 
 import com.ait.lienzo.client.core.shape.wires.WiresContainer;
-import com.ait.lienzo.client.core.shape.wires.handlers.WiresParentPickerControl;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
-import com.ait.tooling.common.api.java.util.function.Supplier;
-import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.ait.lienzo.tools.client.event.HandlerRegistration;
+import com.ait.lienzo.tools.client.event.HandlerRegistrationManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,12 +46,7 @@ public class WiresDockingControlImplTest extends AbstractWiresControlTest {
     @Before
     public void setUp() {
         super.setUp();
-        wiresDockingControl = new WiresDockingControlImpl(new Supplier<WiresParentPickerControl>() {
-            @Override
-            public WiresParentPickerControl get() {
-                return parentPicker;
-            }
-        }, handlerRegistrationManager);
+        wiresDockingControl = new WiresDockingControlImpl(() -> parentPicker, handlerRegistrationManager);
     }
 
     @Test
@@ -75,8 +68,8 @@ public class WiresDockingControlImplTest extends AbstractWiresControlTest {
     @Test
     public void getAdjustWhenNoIntercepting() {
         Point2D adjust = wiresDockingControl.getAdjust();
-        assertEquals(adjust.getX(), 0, 0);
-        assertEquals(adjust.getY(), 0, 0);
+        assertEquals(0, adjust.getX(), 0);
+        assertEquals(0, adjust.getY(), 0);
     }
 
     @Test
