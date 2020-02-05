@@ -132,7 +132,9 @@ public class WiresShapeProxyTest {
         Point2D parentLoc = new Point2D(1d, 2d);
         when(parent.getComputedLocation()).thenReturn(parentLoc);
         tested.start(x, y);
-        assertStart(1d, 3d);
+        verify(shape, times(1)).removeFromParent();
+        verify(wiresLayer, times(1)).add(eq(shape));
+        assertStart(3d, 7d);
     }
 
     @Test
