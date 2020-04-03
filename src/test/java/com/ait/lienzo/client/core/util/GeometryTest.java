@@ -24,9 +24,7 @@ import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(LienzoMockitoTestRunner.class)
 public class GeometryTest {
@@ -59,6 +57,11 @@ public class GeometryTest {
     public void testSgn() {
         assertEquals(-1, Geometry.sgn(-3));
         assertEquals(1, Geometry.sgn(3));
+    }
+
+    @Test
+    public void testMichaelBiarnes() {
+        fail();
     }
 
     @Test
