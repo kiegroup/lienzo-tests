@@ -24,9 +24,7 @@ import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(LienzoMockitoTestRunner.class)
 public class GeometryTest {
@@ -46,6 +44,11 @@ public class GeometryTest {
     }
 
     @Test
+    public void testFailure(){
+        fail();
+    }
+    
+    @Test
     public void testSortSpecial() {
         double[] input = {1.1d, 3d, 0.5d, -1d};
         Geometry.sortSpecial(input);
@@ -60,6 +63,7 @@ public class GeometryTest {
         assertEquals(-1, Geometry.sgn(-3));
         assertEquals(1, Geometry.sgn(3));
     }
+
 
     @Test
     public void testBezierCoeffs() {
