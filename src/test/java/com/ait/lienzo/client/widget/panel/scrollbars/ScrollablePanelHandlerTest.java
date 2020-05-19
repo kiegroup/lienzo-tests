@@ -221,6 +221,61 @@ public class ScrollablePanelHandlerTest {
     }
 
     @Test
+    public void testRefreshEqualBounds() {
+
+        final int newScrollPanelWidth = 42;
+        final int newScrollPanelHeight = 58;
+        tested.currentPanelWidth = newScrollPanelWidth;
+        tested.currentPanelHeight = newScrollPanelHeight;
+
+        doReturn(newScrollPanelWidth).when(tested).calculateInternalScrollPanelWidth();
+        doReturn(newScrollPanelHeight).when(tested).calculateInternalScrollPanelHeight();
+
+        tested.refresh();
+
+        verify(tested, times(0)).synchronizeScrollSize(newScrollPanelWidth, newScrollPanelHeight);
+        verify(tested, times(0)).refreshScrollPosition();
+    }
+
+    @Test
+    public void testRefreshDifferentWidth() {
+
+        final int newScrollPanelWidth = 42;
+        final int newScrollPanelHeight = 58;
+        tested.currentPanelWidth = 40;
+        tested.currentPanelHeight = newScrollPanelHeight;
+
+        doReturn(newScrollPanelWidth).when(tested).calculateInternalScrollPanelWidth();
+        doReturn(newScrollPanelHeight).when(tested).calculateInternalScrollPanelHeight();
+        doNothing().when(tested).synchronizeScrollSize(newScrollPanelWidth, newScrollPanelHeight);
+        doNothing().when(tested).refreshScrollPosition();
+
+        tested.refresh();
+
+        verify(tested, times(1)).synchronizeScrollSize(newScrollPanelWidth, newScrollPanelHeight);
+        verify(tested, times(1)).refreshScrollPosition();
+    }
+
+    @Test
+    public void testRefreshDifferentHeight() {
+
+        final int newScrollPanelWidth = 42;
+        final int newScrollPanelHeight = 58;
+        tested.currentPanelWidth = newScrollPanelWidth;
+        tested.currentPanelHeight = 50;
+
+        doReturn(newScrollPanelWidth).when(tested).calculateInternalScrollPanelWidth();
+        doReturn(newScrollPanelHeight).when(tested).calculateInternalScrollPanelHeight();
+        doNothing().when(tested).synchronizeScrollSize(newScrollPanelWidth, newScrollPanelHeight);
+        doNothing().when(tested).refreshScrollPosition();
+
+        tested.refresh();
+
+        verify(tested, times(1)).synchronizeScrollSize(newScrollPanelWidth, newScrollPanelHeight);
+        verify(tested, times(1)).refreshScrollPosition();
+    }
+
+    @Test
     public void testRefreshScrollPosition() {
 
         final ScrollPosition scrollPosition = mock(ScrollPosition.class);
