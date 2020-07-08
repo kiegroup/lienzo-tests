@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class ToolboxVisibilityExecutorsTest {
 
     @Test
-    public void animationDelay() {
+    public void testAnimationDelay() {
         assertEquals(Double.valueOf(0d), Double.valueOf(ToolboxVisibilityExecutors.ANIMATION_ALPHA_DELAY_MILLIS));
         assertEquals(Double.valueOf(0d), Double.valueOf(ToolboxVisibilityExecutors.ANIMATION_SCALE_DELAY_MILLIS));
     }
