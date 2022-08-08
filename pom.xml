@@ -37,7 +37,6 @@
     <version.org.mockito>1.10.19</version.org.mockito>
     <version.org.javassist>3.22.0-GA</version.org.javassist>
     <version.com.google.gwt.gwtmockito>1.1.8</version.com.google.gwt.gwtmockito>
-    <version.xerces>2.12.2</version.xerces>
 
   </properties>
 
@@ -67,13 +66,6 @@
       <groupId>org.kie</groupId>
       <artifactId>lienzo-core</artifactId>
       <version>${version.org.kie.lienzo}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-      <version>${version.xerces}</version>
       <scope>provided</scope>
     </dependency>
     
